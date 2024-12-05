@@ -17,9 +17,11 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Supplier;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +36,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import javax.annotation.CheckForNull;
 
 /**
  * An immutable builder for {@link Multimap} instances, letting you independently select the desired
@@ -70,6 +76,10 @@ public abstract class MultimapBuilder<K0 extends @Nullable Object, V0 extends @N
 
   private static final int DEFAULT_EXPECTED_KEYS = 8;
 
+
+  boolean useCustomMap;
+  @CheckForNull
+  MapMakerInternalMap.Strength keyStrength;
   /** Uses a hash table to map keys to value collections. */
   public static MultimapBuilderWithKeys<@Nullable Object> hashKeys() {
     return hashKeys(DEFAULT_EXPECTED_KEYS);
@@ -472,5 +482,16 @@ public abstract class MultimapBuilder<K0 extends @Nullable Object, V0 extends @N
         Multimap<? extends K, ? extends V> multimap) {
       return (SortedSetMultimap<K, V>) super.<K, V>build(multimap);
     }
+  }
+  @CanIgnoreReturnValue
+  @GwtIncompatible
+  public MultimapBuilder<K0, V0> weakValues() {
+    return setValueStrength(MapMakerInternalMap.Strength.WEAK);
+  }
+
+  MultimapBuilder<K0, V0> setValueStrength(MapMakerInternalMap.Strength strength) {
+    checkState(keyStrength == null, "Key strength was already set to %s", strength);
+    keyStrength = checkNotNull(strength);
+    return this;
   }
 }

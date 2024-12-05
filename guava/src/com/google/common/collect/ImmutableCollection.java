@@ -194,7 +194,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public final Object[] toArray() {
+  public Object[] toArray() {
     return toArray(EMPTY_ARRAY);
   }
 

@@ -22,6 +22,8 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
+
+import java.util.Arrays;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -88,7 +90,18 @@ class RegularImmutableList<E> extends ImmutableList<E> {
     // The fake cast to E is safe because the creation methods only allow E's
     return (UnmodifiableListIterator<E>) Iterators.forArrayWithPosition(array, index);
   }
+  @SuppressWarnings("unchecked")
+  @Override
+  public <E> E[] toArray(E[] a) {
 
+    if (a.length < array.length)
+      // Make a new array of a's runtime type, but my contents:
+      return (E[]) Arrays.copyOf(array, array.length, a.getClass());
+    System.arraycopy(array, 0, a, 0, array.length);
+    if (a.length > array.length)
+      a[array.length] = null;
+    return a;
+  }
   @Override
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(array, SPLITERATOR_CHARACTERISTICS);

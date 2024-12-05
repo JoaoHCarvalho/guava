@@ -243,7 +243,7 @@ public final class FileBackedOutputStream extends OutputStream {
         temp.deleteOnExit();
       }
       try {
-        FileOutputStream transfer = new FileOutputStream(temp);
+         final FileOutputStream transfer = new FileOutputStream(temp);
         transfer.write(memory.getBuffer(), 0, memory.getCount());
         transfer.flush();
         // We've successfully transferred the data; switch to writing to file
