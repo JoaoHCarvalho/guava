@@ -213,7 +213,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    * nullness perspective. The signature below at least has the virtue of being relatively simple.
    */
   @SuppressWarnings("nullness")
-  public final <T extends @Nullable Object> T[] toArray(T[] other) {
+  public <T extends @Nullable Object> T[] toArray(T[] other) {
     checkNotNull(other);
     int size = size();
 

@@ -95,7 +95,6 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   public <E> E[] toArray(E[] a) {
 
     if (a.length < array.length)
-      // Make a new array of a's runtime type, but my contents:
       return (E[]) Arrays.copyOf(array, array.length, a.getClass());
     System.arraycopy(array, 0, a, 0, array.length);
     if (a.length > array.length)
